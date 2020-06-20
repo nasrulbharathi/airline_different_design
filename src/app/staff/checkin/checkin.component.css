@@ -1,0 +1,82 @@
+.seat-container{
+  padding: 0px;
+}
+
+.seatrow
+{
+    display: inline-flex;
+}
+.pricing-label
+{
+    font-weight: bold;
+    margin: 0px 0px 16px 16px;
+    padding: 0;
+    text-align: left;
+    color: #a0a0a0;
+    border-bottom: 1px solid #e2e2e2;
+}
+.seat-item
+{
+    height: 27px;
+    width: 27px;
+    line-height: 25px;
+    margin: 3px;
+    border-radius: 7px;
+    font-size: 14px;
+    padding-left: 5px;
+}
+.seat-space
+{
+    background-color: white;
+    color:white;
+    border: 0;
+    cursor: none;
+}
+.seat-available
+{
+    color: #a0a0a0;
+    background-color: white;
+    font-weight: bolder;
+    border: 1px solid #a0a0a0;
+}
+.seat-unavailable
+{
+    color: white;
+    background-color: black;
+    font-weight: bolder;
+    border: 1px solid white;
+}
+.seat-booked
+{
+    color: white;
+    font-weight: bolder;
+    background-color: green;
+    border: 1px solid white;
+}
+.seat-booked-with-child
+{
+    color: white;
+    font-weight: bolder;
+    background-color: purple;
+    border: 1px solid white;
+}
+.seat-booked-with-wheel
+{
+    color: white;
+    font-weight: bolder;
+    background-color: orange;
+    border: 1px solid white;
+}
+.seat-item:hover
+{
+    cursor: pointer;
+}
+
+.row-label
+{
+    color:black ;
+    background-color:white;
+    min-width: 20px;
+    font-weight: bolder;
+    line-height: 32px;
+}

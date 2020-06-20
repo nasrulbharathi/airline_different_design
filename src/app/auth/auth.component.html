@@ -1,0 +1,71 @@
+<div class="wrapper fadeInDown">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div id="formContent" *ngIf="!isLoading">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="fadeIn first">
+      <h1>Mindtree Airlines</h1>
+    </div>
+
+    <!-- Login Form -->
+    <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+      <input class="fadeIn second" name="email" type="text" id="email" placeholder="E-Mail" ngModel required email>
+      <input type="password" id="password" class="fadeIn third" placeholder="Password" ngModel name="password" required
+        minlength="6">
+      <!-- <input type="submit" class="fadeIn fourth" value="Log In"> -->
+      <div class="m-3">
+        <button class="btn btn-primary fadeIn fourth m-1" type="submit" [disabled]="!authForm.valid">
+          {{ isLoginMode ? 'Login' : 'Sign Up' }}
+        </button>
+        <button class="btn btn-primary fadeIn fourth" (click)="onSwitchMode()" type="button">
+          Switch to {{ isLoginMode ? 'Sign Up' : 'Login' }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+
+<!-- <div class="container">
+  <div class="row col align-items-center" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="row col col-md-4 offset-md-4" *ngIf="!isLoading">
+    <div class="row container">
+      <mat-card class="login-card">
+        <mat-card-header class="card-header" style="background-color: blanchedalmond;">
+          <mat-card-title class="m-0 p-0">Login</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="content" style="margin-top: 5px;">
+          <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+
+            <mat-form-field class="col-md-12" appearance="outline">
+              <mat-icon matSuffix>home</mat-icon>
+              <mat-label>E-Mail</mat-label>
+              <input matInput type="email" id="email" placeholder="E-Mail" ngModel name="email" required email>
+            </mat-form-field>
+
+            <mat-form-field class="col-md-12" appearance="outline">
+              <mat-icon matSuffix>lock</mat-icon>
+              <mat-label>Password</mat-label>
+              <input matInput type="password" id="password" placeholder="Password" ngModel name="password" required
+                minlength="6">
+            </mat-form-field>
+
+            <div>
+              <button class="btn btn-primary" type="submit" [disabled]="!authForm.valid">
+                {{ isLoginMode ? 'Login' : 'Sign Up' }}
+              </button>
+              |
+              <button class="btn btn-primary" (click)="onSwitchMode()" type="button">
+                Switch to {{ isLoginMode ? 'Sign Up' : 'Login' }}
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div> -->

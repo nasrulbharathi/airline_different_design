@@ -1,0 +1,62 @@
+.navbar{
+  color: white;
+}
+
+.dropdown{
+  margin-top: 5px;
+}
+
+.icon{
+  margin-right: 10px;
+}
+
+mat-form-field {
+  margin-right: 12px;
+}
+
+.col-md-1{
+  font-size: 20px;
+}
+
+.delete{
+  color: brown;
+  cursor: pointer;
+  outline: none;
+}
+
+.edit{
+  color: darkorange;
+  cursor: pointer;
+  outline: none;
+}
+
+.passenger {
+  max-height: 65vh;
+  overflow-y: auto;
+  min-height: 65vh;
+  padding-top: 5px;;
+}
+
+.badge{
+  margin-left: 10px;
+  font: bold;
+}
+
+.topbar{
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.view{
+  cursor: pointer;
+}
+
+mat-checkbox{
+  margin-left: 10px;
+}
+
+mat-radio-button{
+  margin-left: 10px;
+}

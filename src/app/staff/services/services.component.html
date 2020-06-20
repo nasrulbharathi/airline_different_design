@@ -1,0 +1,32 @@
+<mat-card *ngIf="mode === 'Ancillary Services'">
+  <mat-card-content>
+    <div *ngFor="let service of flight.ancillaryService">
+      <mat-checkbox (click)="filterServices(service)">{{service.name}}</mat-checkbox>
+    </div>
+  </mat-card-content>
+  <mat-card-footer>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+  </mat-card-footer>
+</mat-card>
+
+<mat-card *ngIf="mode === 'Shopping Items'">
+  <mat-card-content>
+    <div *ngFor="let service of flight.shoppingItems">
+      <mat-checkbox (click)="filterServices(service)">{{service.name}}</mat-checkbox>
+    </div>
+  </mat-card-content>
+  <mat-card-footer>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+  </mat-card-footer>
+</mat-card>
+
+<mat-card *ngIf="mode === 'Meals'">
+  <mat-card-content>
+    <div *ngFor="let service of flight.specialMeals">
+      <mat-checkbox (click)="filterServices(service)">{{service.name}}</mat-checkbox>
+    </div>
+  </mat-card-content>
+  <mat-card-footer>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+  </mat-card-footer>
+</mat-card>

@@ -1,0 +1,55 @@
+<mat-card style="border: solid black 1px; overflow-y: auto;">
+
+  <mat-icon>person</mat-icon>
+  <mat-divider></mat-divider>
+
+  <div class="row col-md-12 dialog-container">
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput [(ngModel)]="passenger.name" placeholder="Name" required>
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput [(ngModel)]="passenger.passportNumber" placeholder="Passport No">
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput [(ngModel)]="passenger.seatNo" placeholder="Seat No" disabled>
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput [(ngModel)]="passenger.dateOfBirth" placeholder="Date of Birth">
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput [(ngModel)]="passenger.address" placeholder="Address">
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="passenger.wheelChair">Requires Wheelchair</mat-checkbox>
+      <mat-checkbox [(ngModel)]="passenger.isCheckedIn" disabled>Is Checked In</mat-checkbox>
+      <mat-checkbox [(ngModel)]="passenger.isHavingInfant">Is Having Infant</mat-checkbox>
+    </div>
+    <div class="col-md-12">
+      <label>Ancillary Services:</label><br>
+      <span class="badge badge-pill badge-success" *ngFor="let anci of passenger.ancillaryServices">{{anci.name}}</span>
+    </div>
+    <div class="col-md-12">
+      <label>Special Meals:</label><br>
+      <span class="badge badge-pill badge-success" *ngFor="let meal of passenger.specialMeals">{{meal.name}}</span>
+    </div>
+    <div class="col-md-12">
+      <label>Shopping Items:</label><br>
+      <span class="badge badge-pill badge-success" *ngFor="let shop of passenger.shoppingItems">{{shop.name}}</span>
+    </div>
+    <div class="col-md-6 offset-6" style="text-align: right;">
+      <button class="col-md-2 m-1" mat-raised-button color="primary" [mat-dialog-close]="passenger"
+        cdkFocusInitial>Save</button>
+      <button class="col-md-2 m-1" mat-raised-button color="warn" (click)="onNoClick()">Close</button>
+    </div>
+  </div>
+</mat-card>

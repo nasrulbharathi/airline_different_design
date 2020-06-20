@@ -1,0 +1,185 @@
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand">Admin Dashboard</a>
+  <button mat-raised-button color="warn" (click)="logout()">
+    <mat-icon>settings_power</mat-icon>Logout
+  </button>
+</nav>
+
+<div class="row dropdown">
+  <div class="col-md-3 offset-9">
+    <mat-form-field>
+      <mat-label>Select your Flight</mat-label>
+      <select matNativeControl (change)="changeFlight($event.target.value)">
+        <option value="" selected></option>
+        <option *ngFor="let flight of flights" [value]="flight.id"> {{flight.name}}</option>
+      </select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="container" *ngIf="selectedFlight">
+  <div class="row">
+    <div class="col-md-7">
+      <mat-accordion>
+        <mat-expansion-panel class="row col-md-12" class="passenger" [expanded]="0">
+          <div class="row col-md-12">
+            <div class="col-md-2">
+              <mat-icon class="topbar" (click)="openDialog('add')">add_circle</mat-icon>
+            </div>
+            <div class="col-md-10">
+              <!-- <mat-radio-group class="topbar"> -->
+              <mat-checkbox [(ngModel)]="noFilter" (click)="filter('')">No Filter</mat-checkbox>
+              <mat-checkbox [(ngModel)]="noPassport" (click)="filter('passport')">No Passport</mat-checkbox>
+              <mat-checkbox [(ngModel)]="noAddress" (click)="filter('address')">No Address</mat-checkbox>
+              <mat-checkbox [(ngModel)]="noDOB" (click)="filter('dob')">No Date of Birth</mat-checkbox>
+              <!-- <mat-radio-button [(ngModel)]="noFilter" name="filter" value="noFilter">No Filter</mat-radio-button>
+              <mat-radio-button value="noPassport" name="filter">No Passport</mat-radio-button>
+              <mat-radio-button value="noAddress" name="filter">No Address</mat-radio-button>
+              <mat-radio-button value="noDOB" name="filter">No Date of Birth</mat-radio-button> -->
+              <!-- </mat-radio-group> -->
+            </div>
+          </div>
+          <hr>
+          <div class="row col-md-12" *ngFor="let passenger of selectedFlight.passengers">
+            <div class="row col-md-12">
+              <mat-icon class="col-md-1">person</mat-icon>
+              <div class="col-md-6">{{passenger.name}}</div>
+              <div class="col-md-2">{{passenger.seatNo}}</div>
+              <mat-icon class="col-md-1 view" (click)="openDialog('view', passenger)">remove_red_eye</mat-icon>
+              <mat-icon class="col-md-1 edit" (click)="openDialog('edit', passenger)">edit</mat-icon>
+              <mat-icon class=" col-md-1 delete" (click)="deletePassenger(passenger)">delete</mat-icon>
+            </div>
+            <div class="row col-md-12">
+              <span class="badge badge-pill badge-success"
+                *ngFor="let anci of passenger.ancillaryServices">{{anci.name}}</span>
+            </div>
+            <hr class="row col-md-12" style="margin: 5px;">
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="col-md-5">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="0">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="icon">stars</mat-icon>
+              Ancillary Services
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row col-md-12" *ngFor="let anci of selectedFlight.ancillaryService">
+            <mat-icon class="col-md-1">grade</mat-icon>
+            <div class="col-md-6">{{anci.name}}</div>
+            <div class="col-md-2">{{anci.cost}}</div>
+            <mat-icon class="col-md-1 edit"
+              (click)="ancillaryName = anci.name; ancillaryCost=anci.cost; editMode=true; editAnci = anci">
+              edit</mat-icon>
+            <mat-icon class="col-md-1 delete" (click)="deleteAncillary(anci)">delete</mat-icon>
+            <hr>
+          </div>
+          <hr>
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="ancillaryName" placeholder="Ancillary">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="ancillaryCost" placeholder="Cost" type="number">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row col-md-6 offset-6">
+            <button mat-raised-button color="primary" *ngIf="!editMode" (click)="addAncillary()">Add Ancillary</button>
+            <button mat-raised-button color="primary" *ngIf="editMode" (click)="editAncillary(editAnci)">Edit
+              Ancillary</button>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="icon">shopping_cart</mat-icon>Shopping Items
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row col-md-12" *ngFor="let shop of selectedFlight.shoppingItems">
+            <mat-icon class="col-md-1">grade</mat-icon>
+            <div class="col-md-6">{{shop.name}}</div>
+            <div class="col-md-2">{{shop.cost}}</div>
+            <mat-icon class="col-md-1 edit"
+              (click)="shoppingName = shop.name; shoppingCost=shop.cost; editShopMode=true; editShop = shop">
+              edit</mat-icon>
+            <mat-icon class="col-md-1 delete" (click)="deleteShopping(shop)">delete</mat-icon>
+            <br>
+          </div>
+          <hr>
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="shoppingName" placeholder="Shopping Item">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="shoppingCost" placeholder="Cost" type="number">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row col-md-6 offset-6">
+            <button mat-raised-button color="primary" *ngIf="!editShopMode" (click)="addShopping()">Add Shopping
+              Item</button>
+            <button mat-raised-button color="primary" *ngIf="editShopMode" (click)="editShopping(editShop)">Edit
+              Shopping Item</button>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="icon">room_service</mat-icon>Special Meals
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row col-md-12" *ngFor="let meal of selectedFlight.specialMeals">
+            <mat-icon class="col-md-1">grade</mat-icon>
+            <div class="col-md-6">{{meal.name}}</div>
+            <div class="col-md-2">{{meal.cost}}</div>
+            <mat-icon class="col-md-1 edit"
+              (click)="mealName = meal.name; mealCost=meal.cost; editMealMode=true; editSpecialMeal = meal">
+              edit</mat-icon>
+            <mat-icon class="col-md-1 delete" (click)="deleteMeal(meal)">delete</mat-icon>
+            <br>
+          </div>
+          <hr>
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="mealName" placeholder="Special Meal">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [(ngModel)]="mealCost" placeholder="Cost" type="number">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row col-md-6 offset-6">
+            <button mat-raised-button color="primary" *ngIf="!editMealMode" (click)="addMeal()">Add Special
+              Meal</button>
+            <button mat-raised-button color="primary" *ngIf="editMealMode" (click)="editMeal(editSpecialMeal)">Edit
+              Special Meal</button>
+          </div>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+
+    </div>
+  </div>
+</div>
+
+<div class="container alert alert-danger col-md-8 offset 2" *ngIf="!selectedFlight" role="alert">
+  No Flights selected
+</div>

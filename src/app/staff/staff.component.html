@@ -1,0 +1,218 @@
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand">Airline Staff</a>
+  <button mat-raised-button color="warn" (click)="logout()">
+    <mat-icon>settings_power</mat-icon>Logout
+  </button>
+</nav>
+
+<div class="row dropdown">
+  <div class="col-md-3 offset-9">
+    <mat-form-field>
+      <mat-label>Select your Flight</mat-label>
+      <select matNativeControl (change)="changeFlight($event.target.value)">
+        <option value="" selected></option>
+        <option *ngFor="let flight of flights" [value]="flight.id"> {{flight.name}}</option>
+      </select>
+    </mat-form-field>
+  </div>
+</div>
+
+<mat-horizontal-stepper *ngIf="selectedFlight">
+  <mat-step>
+    <ng-template matStepLabel>Airline Staff - CheckIn</ng-template>
+    <!-- Step 1 Content -->
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <mat-accordion>
+            <mat-expansion-panel class="row col-md-12" class="passenger" [expanded]="0">
+              <div class="row col-md-12">
+              </div>
+              <hr>
+              <div class="row col-md-12" *ngFor="let passenger of selectedFlight.passengers">
+                <div class="row col-md-12">
+                  <mat-icon class="col-md-1">person</mat-icon>
+                  <div class="col-md-6">{{passenger.name}}</div>
+                  <div class="col-md-2">{{passenger.seatNo}}</div>
+                  <mat-icon class="col-md-1" style="color: green; cursor: pointer;" (click)="openDialog(passenger)"
+                    *ngIf="passenger.isCheckedIn">check_box</mat-icon>
+                  <mat-icon class="col-md-1" style="color: red; cursor: pointer;" (click)="openDialog(passenger)"
+                    *ngIf="!passenger.isCheckedIn">check_box_outline_blank</mat-icon>
+                  <mat-icon class="col-md-1" style="color: purple;" *ngIf="passenger.isHavingInfant">child_friendly
+                  </mat-icon>
+                  <mat-icon class="col-md-1" style="color: orange;" *ngIf="passenger.wheelChair">accessible</mat-icon>
+
+                </div>
+                <div class="row col-md-12">
+                  <span class="badge badge-pill badge-info"
+                    *ngFor="let anci of passenger.ancillaryServices">{{anci.name}}</span>
+                </div>
+                <hr class="row col-md-12" style="margin: 5px;">
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div class="col-md-4">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="0">
+              <div class="row col-md-12">
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: purple;">child_friendly</mat-icon><br>Infant
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: orange;">accessible</mat-icon><br>Wheelchair
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: green;">airline_seat_recline_extra</mat-icon><br>Booked
+                </div>
+              </div>
+              <hr>
+              <div class="col-lg-12 seat-container" style="padding: 0px;">
+                <div *ngFor="let seatrow of selectedFlight.seatMap">
+                  <div class="col-lg-12 pricing-label"
+                    *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation !== ''">
+                    {{seatrow.seatPricingInformation}}
+                  </div>
+                  <div class="seatrow container">
+                    <div *ngIf="seatChartConfig?.showRowsLabel">
+                      <div class="row-label"> {{seatrow.seatRowLabel}} </div>
+                    </div>
+                    <div *ngFor="let seatobj of seatrow.seats">
+
+                      <div class="seat-item seat-space" style="color:white ; background-color:white"
+                        *ngIf="seatobj.seatLabel == ''">
+                      </div>
+
+                      <div
+                        matTooltip="Seat : {{seatobj.seatLabel}} | {{seatobj.passengerName === ''? 'Price: ' : 'Name: '}} {{seatobj.passengerName === ''? seatobj.price : seatobj.passengerName}}"
+                        [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable', 'seat-booked-with-child' : seatobj.status == 'bookedwithchild', 'seat-booked-with-wheel' : seatobj.status == 'bookedwithwheel'}"
+                        *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' || seatobj.status == 'bookedwithchild' || seatobj.status == 'bookedwithwheel')&& seatobj.seatLabel != ''">
+                        {{seatobj.seatNo}}</div>
+
+                      <div matTooltip="Seat not available"
+                        [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }"
+                        *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Airline Staff - In Flight</ng-template>
+    <!-- Step 2 Content -->
+
+    <div class="container" *ngIf="selectedFlight">
+      <div class="row">
+        <div class="col-md-8">
+          <mat-accordion>
+            <mat-expansion-panel class="row col-md-12" style="max-height: 65vh; overflow-y: auto;" class="passenger"
+              [expanded]="0">
+              <div class="row col-md-12">
+                <!-- Space for Filters -->
+              </div>
+              <hr>
+              <div class="row col-md-12" *ngFor="let passenger of selectedFlight.passengers">
+                <div *ngIf="passenger.isCheckedIn" class="row col-md-12">
+                  <mat-icon class="col-md-1">person</mat-icon>
+                  <div class="col-md-9">{{passenger.name}}</div>
+                  <mat-icon class="col-md-1" style="color: purple;" *ngIf="passenger.isHavingInfant">child_friendly
+                  </mat-icon>
+                  <mat-icon class="col-md-1" style="color: orange;" *ngIf="passenger.wheelChair">accessible</mat-icon>
+                </div>
+
+                <div *ngIf="passenger.isCheckedIn" class="row col-md-12 m-2">
+                  <span *ngFor="let anci of passenger.ancillaryServices">
+                    <span class="badge badge-primary">{{anci.name}}</span>
+                  </span>
+                  <span class="badge badge-warning"
+                    (click)="openServicesDialog('Ancillary Services', passenger, this.selectedFlight)"
+                    style="cursor: pointer;">+</span>
+                </div>
+
+                <div *ngIf="passenger.isCheckedIn" class="row col-md-12 m-2">
+                  <span *ngFor="let shop of passenger.shoppingItems">
+                    <span class="badge badge-success">{{shop.name}}</span>
+                  </span>
+                  <span class="badge badge-warning"
+                    (click)="openServicesDialog('Shopping Items', passenger, this.selectedFlight)"
+                    style="cursor: pointer;">+</span>
+                </div>
+
+                <div *ngIf="passenger.isCheckedIn" class="row col-md-12 m-2">
+                  <span *ngFor="let meal of passenger.specialMeals">
+                    <span class="badge badge-danger">{{meal.name}}</span>
+                  </span>
+                  <span class="badge badge-warning"
+                    (click)="openServicesDialog('Meals', passenger, this.selectedFlight)"
+                    style="cursor: pointer;">+</span>
+                </div>
+
+                <hr *ngIf="passenger.isCheckedIn" class="row col-md-12" style="margin: 5px;">
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div class="col-md-4" style="overflow: auto;">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="0">
+              <div class="row col-md-12">
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: purple;">child_friendly</mat-icon><br>Infant
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: orange;">accessible</mat-icon><br>Wheelchair
+                </div>
+                <div class="col-md-4" style="text-align: center;">
+                  <mat-icon style="vertical-align:middle; color: green;">airline_seat_recline_extra</mat-icon><br>Booked
+                </div>
+              </div>
+              <hr>
+              <div class="col-lg-12 seat-container" style="padding: 0px;">
+                <div *ngFor="let seatrow of selectedFlight.seatMap">
+                  <div class="col-lg-12 pricing-label"
+                    *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation !== ''">
+                    {{seatrow.seatPricingInformation}}
+                  </div>
+                  <div class="seatrow container">
+                    <div *ngIf="seatChartConfig?.showRowsLabel">
+                      <div class="row-label"> {{seatrow.seatRowLabel}} </div>
+                    </div>
+                    <div *ngFor="let seatobj of seatrow.seats">
+
+                      <div class="seat-item seat-space" style="color:white ; background-color:white"
+                        *ngIf="seatobj.seatLabel == ''">
+                      </div>
+
+                      <div
+                        matTooltip="Seat : {{seatobj.seatLabel}} | {{seatobj.passengerName === ''? 'Price: ' : 'Name: '}} {{seatobj.passengerName === ''? seatobj.price : seatobj.passengerName}}"
+                        [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable', 'seat-booked-with-child' : seatobj.status == 'bookedwithchild', 'seat-booked-with-wheel' : seatobj.status == 'bookedwithwheel'}"
+                        *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' || seatobj.status == 'bookedwithchild' || seatobj.status == 'bookedwithwheel')&& seatobj.seatLabel != ''">
+                        {{seatobj.seatNo}}</div>
+
+                      <div matTooltip="Seat not available"
+                        [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }"
+                        *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+
+  </mat-step>
+</mat-horizontal-stepper>
+
+
+<div class="container alert alert-danger col-md-8 offset 2" *ngIf="!selectedFlight" role="alert">
+  No Flights selected
+</div>
